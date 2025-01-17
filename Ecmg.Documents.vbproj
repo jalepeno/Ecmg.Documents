@@ -1,0 +1,69 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Documents</RootNamespace>
+    <TargetFrameworks>net8.0;net48</TargetFrameworks>
+    <Title>Ecmg.Documents</Title>
+    <Version>1.0.10</Version>
+    <Authors>magbender</Authors>
+    <Company>Conteage</Company>
+    <Description>A .NET Core library for abstracting documents, versions and metadata.</Description>
+    <Copyright>Conteage Corp</Copyright>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <AssemblyVersion>3.8.0.25</AssemblyVersion>
+    <FileVersion>3.8.0.25</FileVersion>
+    <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageReleaseNotes></PackageReleaseNotes>
+  </PropertyGroup>
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net8'))">
+  </ItemGroup>
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Utilities\Computer Info\**" />
+    <EmbeddedResource Remove="Utilities\Computer Info\**" />
+    <None Remove="Utilities\Computer Info\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Files\Analyzer\FileDefinitions.zip" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="DotNetZip" Version="1.16.0" />
+    <PackageReference Include="EPPlus" Version="7.5.1" />
+    <PackageReference Include="ExcelDataReader" Version="3.7.0" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.0" />
+    <PackageReference Include="MimeMapping" Version="3.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Serilog" Version="4.1.0" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+    <PackageReference Include="System.ComponentModel" Version="4.3.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.0" />
+    <PackageReference Include="System.Data.Odbc" Version="9.0.0" />
+    <PackageReference Include="System.Data.OleDb" Version="9.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Files\Finder\Items\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="README2.md">
+      <PackagePath>\</PackagePath>
+      <Pack>True</Pack>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>
