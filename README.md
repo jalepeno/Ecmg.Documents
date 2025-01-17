@@ -1,1 +1,1 @@
-﻿Ecmg.Documents.dll is a .NET Core library for abstracting documents, versions and metadata.  It is a free version of a portion of the original Content Transformation Services framework.
+﻿Ecmg.Documents.dll is a .NET Core library for abstracting documents, versions and metadata.  It is a free version of a portion of the original Content Transformation Services framework.  This library is the kernel library for several other libraries, including Ecmg.Operations, Ecmg.Projects and multiple provider libraries.
