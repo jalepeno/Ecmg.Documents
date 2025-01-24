@@ -13,6 +13,8 @@ Imports System.Xml.Serialization
 Imports Documents.Core
 Imports Documents.SerializationUtilities
 Imports Documents.Utilities
+Imports Newtonsoft.Json
+
 
 #End Region
 
@@ -22,7 +24,7 @@ Namespace Transformations
   ''' <remarks>Serialized instances should use the file extension .ctf (Content Transformation File)</remarks>
   <Serializable()>
   <DebuggerDisplay("{DebuggerIdentifier(),nq}")>
-  Public Class Transformation
+  Partial Public Class Transformation
     Implements ISerialize
     Implements ICloneable
     Implements IDescription
@@ -926,6 +928,16 @@ Namespace Transformations
       End Try
     End Function
 
+    Public Overloads Function ToJson() As String
+      Try
+        Return JsonConvert.SerializeObject(Me, Newtonsoft.Json.Formatting.None, New TransformationJsonConverter())
+      Catch ex As Exception
+        ApplicationLogging.LogException(ex, Reflection.MethodBase.GetCurrentMethod)
+        ' Re-throw the exception to the caller
+        Throw
+      End Try
+    End Function
+
 #End Region
 
 #Region "Private Methods"
@@ -1090,7 +1102,7 @@ Namespace Transformations
       End Try
     End Function
 
-    Public Function DeSerialize(ByVal lpXML As System.Xml.XmlDocument) As Object Implements ISerialize.Deserialize
+    Public Function DeSerialize(ByVal lpXML As System.Xml.XmlDocument) As Object Implements ISerialize.DeSerialize
       Try
 
         Dim lobjTransformation As Transformation = Serializer.Deserialize.XmlString(lpXML.OuterXml, Me.GetType)

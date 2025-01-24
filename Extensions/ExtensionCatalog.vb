@@ -89,6 +89,9 @@ Namespace Extensions
 
     Public Shared Property CatalogPath As String
       Get
+        If mobjInstance Is Nothing Then
+          mobjInstance = GetCurrentCatalog()
+        End If
         Return mstrCatalogPath
       End Get
       Private Set(value As String)
@@ -208,11 +211,11 @@ Namespace Extensions
     Private Shared Function GetCurrentCatalog() As ExtensionCatalog
       Try
 
-        CatalogPath = Helper.CleanPath(String.Format("{0}\{1}", FileHelper.Instance.ConfigPath, FILE_NAME))
+        mstrCatalogPath = Helper.CleanPath(String.Format("{0}\{1}", FileHelper.Instance.ConfigPath, FILE_NAME))
 
-        If File.Exists(CatalogPath) Then
+        If File.Exists(mstrCatalogPath) Then
           Try
-            Return Serializer.Deserialize.XmlFile(CatalogPath, GetType(ExtensionCatalog))
+            Return Serializer.Deserialize.XmlFile(mstrCatalogPath, GetType(ExtensionCatalog))
           Catch ex As Exception
             ApplicationLogging.LogException(ex, Reflection.MethodBase.GetCurrentMethod)
             Return New ExtensionCatalog
@@ -451,8 +454,8 @@ Namespace Extensions
     Private Sub mobjExtensionEntries_CollectionChanged(sender As Object, e As System.Collections.Specialized.NotifyCollectionChangedEventArgs) Handles mobjExtensionEntries.CollectionChanged
       Try
         If Not Helper.CallStackContainsMethodName("ReadXml") Then
-          Serializer.Serialize.XmlFile(Me, CatalogPath)
-          Helper.FormatXmlFile(CatalogPath)
+          Serializer.Serialize.XmlFile(Me, mstrCatalogPath)
+          Helper.FormatXmlFile(mstrCatalogPath)
           mobjInstance = GetCurrentCatalog()
           RaiseEvent CollectionChanged(sender, e)
         End If

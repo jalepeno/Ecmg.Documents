@@ -13,6 +13,8 @@ Imports System.Xml.Serialization
 Imports Documents.Core
 Imports Documents.SerializationUtilities
 Imports Documents.Utilities
+Imports Newtonsoft.Json
+
 
 
 #End Region
@@ -352,6 +354,18 @@ Namespace Transformations
 
     'Public MustOverride Sub InitializeFromParameters() Implements ITransformationAction.InitializeFromParameters
 
+    Public Shared Function CreateFromJsonReader(reader As JsonReader) As Action
+      Try
+        'Return JsonConvert.DeserializeObject(reader, GetType(IOperation), New OperationJsonConverter())
+        Dim lobjConverter As New ActionJsonConverter()
+        Return lobjConverter.ReadJson(reader, Nothing, Nothing, Nothing)
+      Catch ex As Exception
+        ApplicationLogging.LogException(ex, Reflection.MethodBase.GetCurrentMethod)
+        ' Re-throw the exception to the caller
+        Throw
+      End Try
+    End Function
+
     Public Overridable Function ToActionItem() As IActionItem
       Try
         Return New ActionItem(Me)
@@ -365,6 +379,16 @@ Namespace Transformations
     Public Overrides Function ToString() As String Implements IActionable.ToString
       Try
         Return DebuggerIdentifier()
+      Catch ex As Exception
+        ApplicationLogging.LogException(ex, Reflection.MethodBase.GetCurrentMethod)
+        ' Re-throw the exception to the caller
+        Throw
+      End Try
+    End Function
+
+    Public Function ToJson() As String
+      Try
+        Return WriteJsonString()
       Catch ex As Exception
         ApplicationLogging.LogException(ex, Reflection.MethodBase.GetCurrentMethod)
         ' Re-throw the exception to the caller
@@ -463,6 +487,16 @@ Namespace Transformations
     Protected Overridable Function GetParameterValue(ByVal lpParameterName As String, ByVal lpDefaultValue As Object) As Object Implements IActionable.GetParameterValue, IActionItem.GetParameterValue
       Try
         Return ActionItem.GetParameterValue(Me, lpParameterName, lpDefaultValue)
+      Catch ex As Exception
+        ApplicationLogging.LogException(ex, Reflection.MethodBase.GetCurrentMethod)
+        ' Re-throw the exception to the caller
+        Throw
+      End Try
+    End Function
+
+    Friend Function WriteJsonString() As String
+      Try
+        Return JsonConvert.SerializeObject(Me, Newtonsoft.Json.Formatting.None, New ActionJsonConverter())
       Catch ex As Exception
         ApplicationLogging.LogException(ex, Reflection.MethodBase.GetCurrentMethod)
         ' Re-throw the exception to the caller
