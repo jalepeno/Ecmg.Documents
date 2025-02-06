@@ -4,7 +4,7 @@
     <RootNamespace>Documents</RootNamespace>
     <TargetFrameworks>net8.0;net48</TargetFrameworks>
     <Title>Ecmg.Documents</Title>
-    <Version>1.0.11</Version>
+    <Version>1.0.12</Version>
     <Authors>magbender</Authors>
     <Company>Conteage</Company>
     <Description>A .NET Core library for abstracting documents, versions and metadata.</Description>
@@ -14,7 +14,7 @@
     <FileVersion>3.8.0.25</FileVersion>
     <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageReleaseNotes>Added support for log4net in addition to the existing support for Serilog.</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/jalepeno/Ecmg.Documents</PackageProjectUrl>
     <RepositoryUrl>https://github.com/jalepeno/Ecmg.Documents</RepositoryUrl>
   </PropertyGroup>
@@ -43,6 +43,7 @@
     <PackageReference Include="DotNetZip" Version="1.16.0" />
     <PackageReference Include="EPPlus" Version="7.5.1" />
     <PackageReference Include="ExcelDataReader" Version="3.7.0" />
+    <PackageReference Include="log4net" Version="3.0.3" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.0" />
@@ -62,6 +63,9 @@
     <Folder Include="Files\Finder\Items\" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="log4net.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="README2.md">
       <PackagePath>\</PackagePath>
       <Pack>True</Pack>

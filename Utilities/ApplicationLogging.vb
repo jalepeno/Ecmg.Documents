@@ -15,6 +15,7 @@ Imports System.Configuration.ConfigurationManager
 Imports System.IO
 Imports System.Reflection
 Imports System.Text
+Imports Documents.Configuration
 Imports Serilog
 Imports Serilog.Events
 Imports Serilog.Formatting.Json
@@ -27,7 +28,7 @@ Namespace Utilities
   ''' Contains shared methods for wrting information to a log file
   ''' </summary>
   ''' <remarks></remarks>
-  Public Class ApplicationLogging
+  Partial Public Class ApplicationLogging
 
 #Region "Class Constants"
 
@@ -39,6 +40,15 @@ Namespace Utilities
     Public Const CLOSE_LOG_EVENT_ID As Integer = 25673
     Private Const MAX_LOG_SIZE As Integer = 10485760 '10000
     Friend Const SETTING_MAX_LOG_SIZE As String = "MaxLogSize"
+
+#End Region
+
+#Region "Enumerations"
+
+    Public Enum LoggingFramework
+      Log4Net = 0
+      Serilog = 1
+    End Enum
 
 #End Region
 
@@ -492,26 +502,28 @@ Namespace Utilities
 
 
         'Dim lstrBaseFileName = String.Format("{0}_{1}", lpApplicationName, Environment.MachineName)
-        Dim lstrBaseFileName As String = GetCurrentBaseLogFile(lpApplicationName, lpAsJson)
 
-        'Log.Logger = New LoggerConfiguration().WriteTo.File(lstrBaseFileName,,,, lpMaxLogSize).CreateLogger()r
-        Log.Logger = New LoggerConfiguration().WriteTo.File(New JsonFormatter(), lstrBaseFileName, LogEventLevel.Debug, lpMaxLogSize,,,, New TimeSpan(0, 0, 30), RollingInterval.Day, lpMaxLogSize).CreateLogger()
 
+        Select Case ConnectionSettings.Instance.LoggingFramework
+          Case LoggingFramework.Serilog
+            InitializeSerilog(lpApplicationName, lpMaxLogSize, lpAsJson)
+          Case Else
+            ConfigureLog4Net()
+        End Select
+
+        'Dim lstrBaseFileName As String = GetCurrentBaseLogFile(lpApplicationName, lpAsJson)
+
+        ''Log.Logger = New LoggerConfiguration().WriteTo.File(lstrBaseFileName,,,, lpMaxLogSize).CreateLogger()r
+        'Log.Logger = New LoggerConfiguration().WriteTo.File(New JsonFormatter(), lstrBaseFileName, LogEventLevel.Debug, lpMaxLogSize,,,, New TimeSpan(0, 0, 30), RollingInterval.Day, lpMaxLogSize).CreateLogger()
 
         'Dim lstrMessage As String = String.Format("{0} '{1}' Loading under user '{2}', the current locale is '{3}'",
-        '                                          lpApplicationName,
-        '                                          My.Application.Info.Version.ToString,
-        '                                          WindowsIdentity.GetCurrent.Name,
-        '                                          Globalization.CultureInfo.CurrentCulture.Name)
+        '                                        lpApplicationName,
+        '                                        Assembly.GetExecutingAssembly.GetName().Version.ToString(),
+        '                                        Environment.UserName,
+        '                                        Globalization.CultureInfo.CurrentCulture.Name)
 
-        Dim lstrMessage As String = String.Format("{0} '{1}' Loading under user '{2}', the current locale is '{3}'",
-                                                lpApplicationName,
-                                                Assembly.GetExecutingAssembly.GetName().Version.ToString(),
-                                                Environment.UserName,
-                                                Globalization.CultureInfo.CurrentCulture.Name)
-
-        'My.Application.Log.WriteEntry(lstrMessage, TraceEventType.Information, OPEN_LOG_EVENT_ID)
-        Log.Information(lstrMessage)
+        ''My.Application.Log.WriteEntry(lstrMessage, TraceEventType.Information, OPEN_LOG_EVENT_ID)
+        'Log.Information(lstrMessage)
 
       Catch ex As Exception
         ApplicationLogging.LogException(ex, Reflection.MethodBase.GetCurrentMethod)
@@ -1035,7 +1047,7 @@ Namespace Utilities
 #End If
 
         WriteLogEntry(lpMessage, String.Empty, lpEventType, lpId)
-        WriteSerilogEntry(lpMessage, lpEventType)
+        'WriteSerilogEntry(lpMessage, lpEventType)
 
       Catch ex As Exception
         ApplicationLogging.LogException(ex, Reflection.MethodBase.GetCurrentMethod)
@@ -1088,25 +1100,7 @@ Namespace Utilities
       End Select
     End Function
 
-    Private Shared Sub WriteSerilogEntry(ByVal lpMessage As String, lpEventType As TraceEventType)
-      Dim lenuLogEventLevel As LogEventLevel = TranslateTraceLevel(lpEventType)
 
-      Select Case lenuLogEventLevel
-        Case LogEventLevel.Fatal
-          Log.Fatal(lpMessage)
-        Case LogEventLevel.Error
-          Log.Error(lpMessage)
-        Case LogEventLevel.Warning
-          Log.Warning(lpMessage)
-        Case LogEventLevel.Information
-          Log.Information(lpMessage)
-        Case LogEventLevel.Verbose
-          Log.Verbose(lpMessage)
-        Case Else
-          Log.Information(lpMessage)
-      End Select
-
-    End Sub
 
     Public Shared Sub WriteLogEntry(ByVal lpMessage As String,
                                   ByVal lpLocation As String,
@@ -1122,18 +1116,34 @@ Namespace Utilities
           End If
 #End If
 
+        Dim lstrMessage As String
         If Not String.IsNullOrEmpty(lpLocation) Then
-          'My.Application.Log.WriteEntry(String.Format("{0}: {1}", lpMessage, lpLocation),
-          '                              lpEventType, lpId)
-          WriteSerilogEntry(String.Format("{0}: {1}", lpMessage, lpLocation), lpEventType)
-          'SiAuto.Main.LogMessage(String.Format("{0}: {1}", lpMessage, lpLocation))
+          lstrMessage = $"{lpMessage}: {lpLocation}"
         Else
-          'My.Application.Log.WriteEntry(lpMessage, lpEventType, lpId)
-          'My.Application.Log.WriteEntry(String.Format("{0}", lpMessage), lpEventType, lpId)
-          WriteSerilogEntry(lpMessage, lpEventType)
-          'SiAuto.Main.LogMessage(lpMessage)
-          'SiAuto.Main.LogString(Level.Verbose, lpLocation, lpMessage)
+          lstrMessage = lpMessage
         End If
+
+        Select Case ConnectionSettings.Instance.LoggingFramework
+          Case LoggingFramework.Serilog
+            WriteSerilogEntry(lstrMessage, lpEventType)
+          Case LoggingFramework.Log4Net
+            WriteLog4NetEntry(lstrMessage, lpEventType)
+          Case Else
+            WriteLog4NetEntry(lstrMessage, lpEventType)
+        End Select
+
+        'If Not String.IsNullOrEmpty(lpLocation) Then
+        '  'My.Application.Log.WriteEntry(String.Format("{0}: {1}", lpMessage, lpLocation),
+        '  '                              lpEventType, lpId)
+        '  WriteSerilogEntry(String.Format("{0}: {1}", lpMessage, lpLocation), lpEventType)
+        '  'SiAuto.Main.LogMessage(String.Format("{0}: {1}", lpMessage, lpLocation))
+        'Else
+        '  'My.Application.Log.WriteEntry(lpMessage, lpEventType, lpId)
+        '  'My.Application.Log.WriteEntry(String.Format("{0}", lpMessage), lpEventType, lpId)
+        '  WriteSerilogEntry(lpMessage, lpEventType)
+        '  'SiAuto.Main.LogMessage(lpMessage)
+        '  'SiAuto.Main.LogString(Level.Verbose, lpLocation, lpMessage)
+        'End If
 
         ''If Not String.IsNullOrEmpty(lpLocation) Then
         ''  Dim lstrLogMessage As String = $"{lpLocation}: {lpMessage}"

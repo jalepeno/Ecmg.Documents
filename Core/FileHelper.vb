@@ -1747,7 +1747,11 @@ Namespace Core
         If IO.Directory.Exists(lstrSharedPath) Then
           Return lstrSharedPath
         Else
-          Return String.Empty
+          'Return String.Empty
+          ' Temporarily changing this to just return the assembly path to better align
+          ' with applications that are not deployed via a formal installation but 
+          ' rather via copying the files to a computer and running
+          Return lstrAssemblyPath
         End If
 
       Catch ex As Exception

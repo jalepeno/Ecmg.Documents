@@ -76,6 +76,7 @@ Namespace Configuration
 
     Private mstrActiproLicenseeName As String = String.Empty
     Private mstrActiproLicenseKey As String = String.Empty
+    Private menuLoggingFramework As ApplicationLogging.LoggingFramework = ApplicationLogging.LoggingFramework.Log4Net
 
 #End Region
 
@@ -256,6 +257,15 @@ Namespace Configuration
           Throw
         End Try
       End Get
+    End Property
+
+    Public Property LoggingFramework As ApplicationLogging.LoggingFramework
+      Get
+        Return menuLoggingFramework
+      End Get
+      Set(value As ApplicationLogging.LoggingFramework)
+        menuLoggingFramework = value
+      End Set
     End Property
 
     Public Property LogFolderPath As String
@@ -1217,8 +1227,8 @@ Namespace Configuration
         lobjConnectionSettings.ContentSourceConnectionStrings.Add(lstrDefaultConnectionString)
 
         ' Make an entry in the log showing that we created the connection settings file.
-        ApplicationLogging.WriteLogEntry(String.Format("Created initial connection string '{0}'.",
-                                                       lstrDefaultConnectionString), TraceEventType.Information, 63482)
+        ''ApplicationLogging.WriteLogEntry(String.Format("Created initial connection string '{0}'.",
+        ''                                               lstrDefaultConnectionString), TraceEventType.Information, 63482)
 
         lobjConnectionSettings.mstrSettingsPath = lpConfigPath
 
