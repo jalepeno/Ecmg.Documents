@@ -61,7 +61,7 @@ Namespace Utilities
         Case LogEventLevel.Information
           NetLog.Info(lpMessage)
         Case LogEventLevel.Verbose
-          NetLog.Info(lpMessage)
+          ' Don't log this level, there is no verbose setting for log4net
         Case Else
           NetLog.Info(lpMessage)
       End Select

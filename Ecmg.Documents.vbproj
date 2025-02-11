@@ -4,7 +4,7 @@
     <RootNamespace>Documents</RootNamespace>
     <TargetFrameworks>net8.0;net48</TargetFrameworks>
     <Title>Ecmg.Documents</Title>
-    <Version>1.0.12</Version>
+    <Version>1.0.13</Version>
     <Authors>magbender</Authors>
     <Company>Conteage</Company>
     <Description>A .NET Core library for abstracting documents, versions and metadata.</Description>
@@ -14,7 +14,7 @@
     <FileVersion>3.8.0.25</FileVersion>
     <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Added support for log4net in addition to the existing support for Serilog.</PackageReleaseNotes>
+    <PackageReleaseNotes></PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/jalepeno/Ecmg.Documents</PackageProjectUrl>
     <RepositoryUrl>https://github.com/jalepeno/Ecmg.Documents</RepositoryUrl>
   </PropertyGroup>
