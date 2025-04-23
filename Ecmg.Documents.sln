@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Extensions.EDD", "..\..\Del
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecmg.Documents.Providers.FileNetCEWS", "..\Documents.Providers.FileNetCEWS\Ecmg.Documents.Providers.FileNetCEWS.csproj", "{76089AF0-5CE9-4A04-A034-A261145D4063}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecmg.Documents.Providers.AmazonS3", "..\Documents.Providers.AmazonS3\Ecmg.Documents.Providers.AmazonS3.csproj", "{E89F8823-5ED6-F1B5-C8B6-39E7DC0C3E59}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,8 +47,15 @@ Global
 		{76089AF0-5CE9-4A04-A034-A261145D4063}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76089AF0-5CE9-4A04-A034-A261145D4063}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76089AF0-5CE9-4A04-A034-A261145D4063}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E89F8823-5ED6-F1B5-C8B6-39E7DC0C3E59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E89F8823-5ED6-F1B5-C8B6-39E7DC0C3E59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E89F8823-5ED6-F1B5-C8B6-39E7DC0C3E59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E89F8823-5ED6-F1B5-C8B6-39E7DC0C3E59}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8DC91B5F-01E7-4CFE-96EB-55BF34DE5635}
 	EndGlobalSection
 EndGlobal

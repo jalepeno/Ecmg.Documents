@@ -174,11 +174,11 @@ Namespace Utilities
         End If
 
         If Stream IsNot Nothing Then
-          Dim lobjSize As New FileSize(Stream.Length)
           If Stream.CanRead Then
+            Dim lobjSize As New FileSize(Stream.Length)
             lobjIdentifierBuilder.AppendFormat("Readable ({0})", lobjSize.ToString)
           Else
-            lobjIdentifierBuilder.AppendFormat("Can't Read ({0})", lobjSize.ToString)
+            lobjIdentifierBuilder.Append("Can't Read")
           End If
 
         Else
